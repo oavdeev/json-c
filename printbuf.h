@@ -22,8 +22,8 @@ extern "C" {
 
 struct printbuf {
   char *buf;
-  int bpos;
-  int size;
+  ssize_t bpos;
+  ssize_t size;
 };
 
 extern struct printbuf*
@@ -36,8 +36,8 @@ printbuf_new(void);
  * Your code should not use printbuf_memappend directly--use
  * printbuf_memappend_fast instead.
  */
-extern int
-printbuf_memappend(struct printbuf *p, const char *buf, int size);
+extern ssize_t
+printbuf_memappend(struct printbuf *p, const char *buf, ssize_t size);
 
 #define printbuf_memappend_fast(p, bufptr, bufsize)          \
 do {                                                         \
@@ -59,7 +59,7 @@ do {                                                         \
  * If offset is -1, this starts at the end of the current data in the buffer.
  */
 extern int
-printbuf_memset(struct printbuf *pb, int offset, int charvalue, int len);
+printbuf_memset(struct printbuf *pb, ssize_t offset, int charvalue, ssize_t len);
 
 extern int
 sprintbuf(struct printbuf *p, const char *msg, ...);

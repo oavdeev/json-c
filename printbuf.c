@@ -28,7 +28,7 @@
 #include "debug.h"
 #include "printbuf.h"
 
-static int printbuf_extend(struct printbuf *p, int min_size);
+static int printbuf_extend(struct printbuf *p, ssize_t min_size);
 
 struct printbuf* printbuf_new(void)
 {
@@ -54,10 +54,10 @@ struct printbuf* printbuf_new(void)
  * Note: this does not check the available space!  The caller
  *  is responsible for performing those calculations.
  */
-static int printbuf_extend(struct printbuf *p, int min_size)
+static int printbuf_extend(struct printbuf *p, ssize_t min_size)
 {
 	char *t;
-	int new_size;
+	ssize_t new_size;
 
 	if (p->size >= min_size)
 		return 0;
@@ -77,7 +77,7 @@ static int printbuf_extend(struct printbuf *p, int min_size)
 	return 0;
 }
 
-int printbuf_memappend(struct printbuf *p, const char *buf, int size)
+ssize_t printbuf_memappend(struct printbuf *p, const char *buf, ssize_t size)
 {
   if (p->size <= p->bpos + size + 1) {
     if (printbuf_extend(p, p->bpos + size + 1) < 0)
@@ -89,9 +89,9 @@ int printbuf_memappend(struct printbuf *p, const char *buf, int size)
   return size;
 }
 
-int printbuf_memset(struct printbuf *pb, int offset, int charvalue, int len)
+int printbuf_memset(struct printbuf *pb, ssize_t offset, int charvalue, ssize_t len)
 {
-	int size_needed;
+	ssize_t size_needed;
 
 	if (offset == -1)
 		offset = pb->bpos;
@@ -154,7 +154,7 @@ int sprintbuf(struct printbuf *p, const char *msg, ...)
 {
   va_list ap;
   char *t;
-  int size;
+  ssize_t size;
   char buf[128];
 
   /* user stack buffer first */
